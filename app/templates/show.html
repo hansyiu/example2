@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Flasky - Page Not Found{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <span>
+        <img src="/check_code" alt="验证码" onclick="ChangeCode(this);">
+    </span>
+</div>
+
+
+<script src="/static/js/jquery-1.12.4.js"></script>
+<script type="application/javascript">
+    function ChangeCode(ths) {
+        ths.src += '?';
+    }
+</script>
+{% endblock %}
