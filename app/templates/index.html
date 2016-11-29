@@ -3,7 +3,119 @@
 {% block title %}Flasky - Page Not Found{% endblock %}
 
 {% block page_content %}
-<div class="page-header">
-    <h1>Index Page</h1>
+<style>
+    .input-box{
+        margin-top:10px;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="page-header" style="float: left">
+    <h3 style="color: red;">Index Page</h3>
+    <div style="border: solid 1px;color:green;height: 30px;width: 120px;">
+    <span>
+        <img src="/check_code" alt="验证码" onclick="ChangeCode(this);">
+    </span>
+    </div>
+    <div style="height: 60px;line-height: 90px;">
+        <input type="button" alt="更多" value="更多">
+    </div>
 </div>
+
+<div class="xxxx," style="float: right">
+    <div class="web_login">
+        <fieldset>
+            <legend>登录区</legend>
+            <div class="input-box">
+                <input type="text" name="username" placeholder="用户名">
+            </div>
+            <div class="input-box">
+                <input type="password" name="password" placeholder="密码">
+            </div>
+            <div class="input-box">
+                <input type="button" value="Log In" onclick="SubmitLogin(this);">
+            </div>
+        </fieldset>
+    </div>
+    <div class="web_reg">
+        <fieldset style="margin-top: 20px;">
+            <legend>注册区</legend>
+            <div class="input-box">
+                <input type="text" name="username" placeholder="用户名">
+            </div>
+            <div class="input-box">
+                <input type="text" name="password" placeholder="密码">
+            </div>
+            <div class="input-box">
+                <input type="button" value="Register" onclick="SubmitRegister(this);">
+            </div>
+        </fieldset>
+    </div>
+
+
+
+
+</div>
+
+
+
+
+<div style="margin-top: 500px;float: left;margin-left: 0px;">
+    <div>
+        果真能飘上去的字符串~~~~~ ✎﹏๓₯㎕ด้้้้้็็็็็้้้้้็็็็็้้้้้้้้็็็็็้้้
+    </div>
+</div>
+
+<script src="/static/js/jquery-1.12.4.js"></script>
+<script type="application/javascript">
+    // change check code
+    function ChangeCode(ths) {
+        ths.src += '?';
+    }
+
+    // submit login
+    function SubmitLogin(ths){
+        var post_dict = {};
+        $('.web_login input').each(function (){
+            post_dict[$(this).attr("name")] = $(this).val();
+        });
+        $.ajax({
+            url: '/login',
+            type: 'POST',
+            data: post_dict,
+            dataType: 'json',
+            success: function (arg){
+                if (arg.status){
+                    window.location.href = '/show';
+                }else{
+                    alert('login_error');
+                }
+            }
+
+        });
+    }
+
+    function SubmitRegister(ths){
+        var post_dict = {};
+        $('.web_reg input').each(function (){
+            post_dict[$(this).attr("name")] = $(this).val();
+        });
+        console.log(post_dict)
+        $.ajax({
+            url: '/register',
+            type: 'POST',
+            data: post_dict,
+            dataType: 'json',
+            success: function (arg){
+                if (arg.status){
+                    window.location.href = '/show';
+                }else{
+                    alert('register_error');
+                }
+            }
+
+        });
+    }
+
+</script>
 {% endblock %}
