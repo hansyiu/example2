@@ -1,14 +1,15 @@
 # _*_ coding: utf-8 _*_
 # account.py
 import io
+import json
 from app import db
-from flask import render_template, redirect, request, url_for, flash, abort, session, Flask, g
-from flask_login import login_user
+from flask import render_template, redirect, request, url_for, flash, abort, session, Flask, g, Response
+from flask_login import login_user, logout_user, login_required
 from . import main
 from ..auth import auth
 from ..backend.utils import check_code
-from ..form.forms import LoginForm, RegistrationForm
-from ..model.models import User
+from ..forms import LoginForm, RegistrationForm
+from ..models import User
 
 
 # 验证码功能
@@ -22,33 +23,67 @@ def check_code_handler():
     return stream.getvalue()
 
 
-@auth.route('/login', methods=['POST'])
+
+
+
+@auth.route('/login', methods=['POST', 'GET'])
 def login():
     form = LoginForm(request.form)
+    status_dic = {'status': False}
     if request.method == 'POST' and form.validate():
         user = User.query.filter_by(username=form.username.data).first()
-        if user and User.verify_password(form.password.data):
-            print('========Success!=========')
+        if user and user.verify_password(form.password.data):
+            login_user(user)
+            nextx = request.args.get('next')
+            print('---------------')
+            print(nextx)
+            status_dic['status'] = True
+            status_str = json.dumps(status_dic)
+            return status_str
+        else:
+            status_str = json.dumps(status_dic)
+            return status_str
+    elif request.method == 'GET':
+        return redirect(url_for('main.index'))
     else:
         print('eeeeeeeeeeeeeeeeeee')
-    status_dic = {'status': False}
-    import json
     status_str = json.dumps(status_dic)
     return status_str
+
+
+@auth.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out.')
+    return redirect(url_for('main.index'))
 
 
 @auth.route('/register', methods=['POST'])
 def register():
+    print('============')
+    print(request.cookies.get('username'))
     form = RegistrationForm(request.form)
-    if request.method == 'POST' and form.validate():
-        user = User.query.filter_by(username=form.username.data).first()
-        print(form.username.data, form.password.data)
-    else:
-        print('eeeeeeeeeeeeeeeeeee')
     status_dic = {'status': False}
-    import json
-    status_str = json.dumps(status_dic)
-    return status_str
+    if request.method == 'POST' and form.validate():
+        user = User(username=form.username.data,
+                    password=form.password.data,
+                    group_id=1,
+                    user_status=1,
+                    email='admin@example.com',
+                    phone='13800138001')
+        db.session.add(user)
+        db.session.commit()
+        flash('注册成功')
+        import time
+        time.sleep(2)
+        status_dic['status'] = True
+        status_str = json.dumps(status_dic)
+        return status_str
+    else:
+        status_str = json.dumps(status_dic)
+        return status_str
+
 
 # 异常处理
 @main.app_errorhandler(404)
