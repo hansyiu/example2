@@ -4,10 +4,12 @@ from app import db
 from flask import request,render_template,flash,abort,url_for,redirect,session,Flask,g
 from . import main
 from flask_login import login_required
+from ..forms import LoginForm
 
 @main.route('/')
 def index():
-    return render_template('index.html')
+    form = LoginForm()
+    return render_template('index.html', form=form)
 
 
 # @main.route('/index')

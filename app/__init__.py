@@ -2,12 +2,14 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_wtf.csrf import CsrfProtect
 
 
 db = SQLAlchemy()
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
+csrf = CsrfProtect()
 
 
 def create_app():
@@ -17,6 +19,8 @@ def create_app():
 
     # 初始化数据库对象
     db.init_app(app)
+
+    csrf.init_app(app)
 
     # 初始化login_manager对象
     login_manager.init_app(app)

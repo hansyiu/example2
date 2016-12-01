@@ -30,7 +30,7 @@ def check_code_handler():
 def login():
     form = LoginForm(request.form)
     status_dic = {'status': False}
-    if request.method == 'POST' and form.validate():
+    if request.method == 'POST' and form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user and user.verify_password(form.password.data):
             login_user(user)

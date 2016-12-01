@@ -79,6 +79,14 @@
         $('.web_login input').each(function (){
             post_dict[$(this).attr("name")] = $(this).val();
         });
+        var csrftoken = "{{ csrf_token() }}"
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type)) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken)
+                }
+            }
+        });
         $.ajax({
             url: '/login',
             type: 'POST',
@@ -95,21 +103,28 @@
         });
     }
 
-    function SubmitRegister(ths){
+    function SubmitRegister(ths) {
         var post_dict = {};
-        $('.web_reg input').each(function (){
+        $('.web_reg input').each(function () {
             post_dict[$(this).attr("name")] = $(this).val();
         });
-        console.log(post_dict)
+        var csrftoken = "{{ csrf_token() }}"
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type)) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken)
+                }
+            }
+        });
         $.ajax({
             url: '/register',
             type: 'POST',
             data: post_dict,
             dataType: 'json',
-            success: function (arg){
-                if (arg.status){
+            success: function (arg) {
+                if (arg.status) {
                     window.location.href = '/show';
-                }else{
+                } else {
                     alert('register_error');
                 }
             }
