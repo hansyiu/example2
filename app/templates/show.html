@@ -5,6 +5,9 @@
     <title>Title</title>
 </head>
 <body>
+    {% if current_user.is_authenticated %}
+      Hi {{ current_user.username }}!
+    {% endif %}
     <h1>这里登录才看得见！</h1>
 
 </body>

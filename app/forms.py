@@ -24,9 +24,9 @@ class RegistrationForm(Form):
         if User.query.filter_by(username=field.data).first():
             raise ValidationError('用户名已存在')
 
-    # def validate_email(self, field):
-    #     if User.query.filter_by(email=field.data).first():
-    #         raise ValidationError('Email地址已存在')
+    def validate_email(self, field):
+        if User.query.filter_by(email=field.data).first():
+            raise ValidationError('Email地址已存在')
 
 
 

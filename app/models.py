@@ -1,10 +1,10 @@
 # _*_ coding: utf-8 _*_
 # from app import db,
-from flask_login import UserMixin
+from flask_login import UserMixin, AnonymousUserMixin
 from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.security import generate_password_hash, check_password_hash
-from . import db, login_manager
+from app import db, login_manager
 
 
 class Role(db.Model):
@@ -69,6 +69,14 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.username
+
+
+class AnonymousUser(AnonymousUserMixin):
+    def __init__(self):
+        self.username = 'Guest'    # 定义匿名用户(未登录用户)的用户名
+
+
+login_manager.anonymous_user = AnonymousUser
 
 
 @login_manager.user_loader

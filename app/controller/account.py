@@ -1,8 +1,8 @@
 # _*_ coding: utf-8 _*_
 # account.py
+from app import db
 import io
 import json
-from app import db
 from flask import render_template, redirect, request, url_for, flash, abort, session, Flask, g, Response
 from flask_login import login_user, logout_user, login_required
 from . import main
