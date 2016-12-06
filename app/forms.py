@@ -7,9 +7,9 @@ from .models import User
 
 
 class LoginForm(Form):
-    username = StringField('username', validators=[DataRequired(), Length(4, 20), Regexp('^[A-Za-z][A-Za-z0-9_]*$', 0,
-                                                                                         '用户名只能由字母和下划线组成')])
-    password = PasswordField('password', validators=[DataRequired(), Length(6, 20)])
+    username = StringField('username', validators=[DataRequired(), Length(4, 20, ' 4-20个字符'), Regexp('^[A-Za-z][A-Za-z0-9_]*$', 0,
+                                                                                         '仅支持字母、数字、“-”“_”的组合')])
+    password = PasswordField('password', validators=[DataRequired(), Length(6, 20, '6-20个字符')])
     submit = SubmitField('Log In')
 
 

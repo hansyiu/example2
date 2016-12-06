@@ -23,9 +23,6 @@ def check_code_handler():
     return stream.getvalue()
 
 
-
-
-
 @auth.route('/login', methods=['POST', 'GET'])
 def login():
     form = LoginForm(request.form)
@@ -34,19 +31,21 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         if user and user.verify_password(form.password.data):
             login_user(user)
-            nextx = request.args.get('next')
-            print('---------------')
-            print(nextx)
+            # 返回前端状态
             status_dic['status'] = True
             status_str = json.dumps(status_dic)
             return status_str
         else:
             status_str = json.dumps(status_dic)
             return status_str
+
     elif request.method == 'GET':
         return redirect(url_for('main.index'))
     else:
-        print('eeeeeeeeeeeeeeeeeee')
+        print('===表单验证失败！===')
+        print(type(form.errors))
+        print(form.errors)
+        # {'username': ['用户名只能由字母和下划线组成']}
     status_str = json.dumps(status_dic)
     return status_str
 

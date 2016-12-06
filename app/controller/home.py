@@ -6,13 +6,10 @@ from . import main
 from flask_login import login_required, current_user
 from ..forms import LoginForm
 
+
 @main.route('/')
 def index():
     form = LoginForm()
-    print('==========================')
-    print(current_user)
-    print(current_user.username)
-    print(type(current_user))
     return render_template('index.html', form=form)
 
 
