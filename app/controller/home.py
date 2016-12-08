@@ -5,6 +5,7 @@ from flask import request,render_template,flash,abort,url_for,redirect,session,F
 from . import main
 from flask_login import login_required, current_user
 from ..forms import LoginForm
+from ..backend.utils.token_create import TToken
 
 
 @main.route('/')
@@ -13,9 +14,16 @@ def index():
     return render_template('index.html', form=form)
 
 
-# @main.route('/index')
-# def index():
-#     return render_template('index.html')
+@main.route('/api/get_key', methods=['GET'])
+@login_required
+def get_key():
+    username = session.get('username')
+    if username:
+        ttoken = TToken(username)
+        token_bytes = ttoken.generate_auth_token(expiration=300)
+        token_str = str(token_bytes, encoding='utf-8')
+        print(token_str)
+    return '<h1>get_key</h1>'
 
 
 @main.route('/show')

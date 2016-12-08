@@ -3,13 +3,13 @@
 from app import db
 import io
 import json
-from flask import render_template, redirect, request, url_for, flash, abort, session, Flask, g, Response
-from flask_login import login_user, logout_user, login_required
 from . import main
 from ..auth import auth
 from ..backend.utils import check_code
-from ..forms import LoginForm, RegistrationForm
 from ..models import User
+from ..forms import LoginForm, RegistrationForm
+from flask import render_template, redirect, request, url_for, flash, abort, session, Flask, g, Response
+from flask_login import login_user, logout_user, login_required
 
 
 # 验证码功能
@@ -18,8 +18,6 @@ def check_code_handler():
     stream = io.BytesIO()
     img, code = check_code.create_validate_code()
     img.save(stream, "png")
-    print(code)
-    # return "<h1>OK</h1>"
     return stream.getvalue()
 
 
@@ -31,7 +29,8 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         if user and user.verify_password(form.password.data):
             login_user(user)
-            # 返回前端状态
+            # 返回状态到前端并写入到session
+            session['username'] = form.username.data
             status_dic['status'] = True
             status_str = json.dumps(status_dic)
             return status_str
@@ -42,10 +41,12 @@ def login():
     elif request.method == 'GET':
         return redirect(url_for('main.index'))
     else:
+        '''
         print('===表单验证失败！===')
         print(type(form.errors))
         print(form.errors)
         # {'username': ['用户名只能由字母和下划线组成']}
+        '''
     status_str = json.dumps(status_dic)
     return status_str
 
